@@ -3,6 +3,24 @@ const searchMovieButton = document.getElementById('search-btn');
 
 const movies = [];
 
+const movieRender = () => {
+    const movieList = document.getElementById('movie-list');
+
+    if (movies.length === 0) {
+        movieList.classList.remove('visible');
+    } else {
+        movieList.classList.add('visible');
+    }
+
+    movieList.innerHTML = '';
+
+    movies.forEach(movie => {
+        const movieEl = document.createElement('li');
+        movieEl.textContent = movie.info.title;
+        movieList.append(movieEl);
+    })
+};
+
 const addMovieHandler = () => {
     const title = document.getElementById('title').value;
     const extraName = document.getElementById('extra-name').value;
@@ -24,8 +42,8 @@ const addMovieHandler = () => {
         id: Math.random()
     };
 
-    movies.push(neeMovie);
-    console.log(movies);
+    movies.push(newMovie);
+    movieRender();
 };
 
 addMovieButton.addEventListener('click', addMovieHandler);
