@@ -24,10 +24,10 @@ const movieRender = (filter = '') => {
         console.log(otherProps);
         // const { title: movieTitle } = info;
         let { getFormattedTitle } = movie;
-        getFormattedTitle = getFormattedTitle.bind(movie);
-        let text = getFormattedTitle() + ' - ';
+        // getFormattedTitle = getFormattedTitle.bind(movie);
+        let text = getFormattedTitle.apply(movie) + ' - ';
         for (key in info) {
-            if (key !== 'title') {
+            if (key !== 'title' && key !== '_title') {
                 text = text + `${key}: ${info[key]}`;
             }
         }
@@ -42,7 +42,6 @@ const addMovieHandler = () => {
     const extraValue = document. getElementById('extra-value').value;
 
     if (
-        title.trim () === '' || 
         extraValue.trim() === '' || 
         extraName.trim() === ''
     ) {
@@ -51,8 +50,17 @@ const addMovieHandler = () => {
 
     const newMovie = {
         info: {
-            title,
             [extraName]: extraValue
+        },
+        set title(val) {
+            if (val.trim() === '') {
+                this._title = 'DEFAULT';
+                return;
+            }
+            this._title = val;
+        },
+        get title() {
+            return this._title;
         },
         id: Math.random().toString(),
         getFormattedTitle() {
@@ -60,6 +68,7 @@ const addMovieHandler = () => {
         }
     };
 
+    newMovie.info.title = title;
     movies.push(newMovie);
     movieRender();
 };
